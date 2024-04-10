@@ -2,7 +2,7 @@
 
 Este repositório contém dois conjuntos de códigos em C++, demonstrando a importância e aplicação dos princípios SOLID no desenvolvimento de software.
 
-### Princípios SOLID:
+### Princípios SOLID Usados nos códigos:
 
 1. **SRP (Princípio da Responsabilidade Única)**:
    - Classes devem ter apenas uma razão para mudar, encapsulando apenas uma responsabilidade.
@@ -34,8 +34,9 @@ Este repositório contém dois conjuntos de códigos em C++, demonstrando a impo
    - Adicionou funcionalidades sem modificar as classes existentes, respeitando a abertura para extensão.
 
 ### Como Usar:
-- O diretório **[no-principle](/no-principle/)** contém o código violando os princípios SOLID.
-- O diretório **[principle](/principle/)** contém o código respeitando os princípios SOLID.
+- O código violando os princípios SOLID está no arquivo [No-Principle.cpp](/No-Principle.cpp).
+- O código respeitando os princípios SOLID está no arquivo [Principle.cpp](/Principle.cpp).
+
 
 ### Contribuição:
 - Sinta-se à vontade para contribuir com melhorias ou correções.
