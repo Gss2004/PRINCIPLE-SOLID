@@ -37,7 +37,7 @@ Este repositório contém dois conjuntos de códigos em C++, demonstrando a impo
      não é mantido.
     
    
-4.  **Violando Dependency Inversion Principle**:
+4. **Violando Dependency Inversion Principle**:
    - Neste exemplo, a classe Ostrich herda de Bird, o que é uma relação "é um". No entanto, quando chamamos makeBirdFly() passando um objeto Ostrich, 
      esperamos que o avestruz não voe. No entanto, a classe Ostrich sobrescreve o método fly() e imprime que o avestruz não pode voar. Isso viola o LSP, 
      pois um objeto Ostrich não pode ser substituído corretamente por um objeto Bird em todas as situações, especialmente quando o comportamento esperado 
