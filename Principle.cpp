@@ -1,91 +1,140 @@
 #include <iostream>
+#include <iostream>
 #include <string>
-using namespace std;
-
-class Aluno {
+#include <vector>
+//SRP
+class MathOperations {
 public:
-    string nome;
-    string ra;
-    int idade;
-
-public:
-    Aluno(string _nome, string _ra, int _idade) : nome(_nome), ra(_ra), idade(_idade) {}
-
-    ~Aluno() {
-        cout << "O objeto Aluno foi excluído" << endl;
+    static int add(int a, int b) {
+        return a + b;
     }
 
-    void mostrar_info() const {
-        cout << "Nome: " << nome << endl;
-        cout << "RA: " << ra << endl;
-        cout << "Idade: " << idade << endl;
+    static int multiply(int a, int b) {
+        return a * b;
     }
 };
 
-class Livro {
-protected:
-    string nome;
-    int numero;
-    int numero_de_paginas;
-    int numero_do_livro;
-
+class ResultPrinter {
 public:
-    Livro(string _nome, int _numero, int _numero_de_paginas, int _numero_do_livro) 
-        : nome(_nome), numero(_numero), numero_de_paginas(_numero_de_paginas), numero_do_livro(_numero_do_livro) {}
-
-    ~Livro() {
-        cout << "O objeto Livro foi excluído" << endl;
+    static void printAdditionResult(int result) {
+        std::cout << "Result of addition: " << result << std::endl;
     }
 
-    void mostrar_info() const {
-        cout << "Nome do livro: " << nome << endl;
-        cout << "Número do livro: " << numero << endl;
-        cout << "Número de páginas: " << numero_de_paginas << endl;
-        cout << "Número do livro: " << numero_do_livro << endl;
+    static void printMultiplicationResult(int result) {
+        std::cout << "Result of multiplication: " << result << std::endl;
     }
 };
 
-class Emprestimolivro : public Livro {
+//DEMETER
+class Teacher {
+public:
+    std::string getName() const {
+        return "Mr. Smith";
+    }
+};
+
+class Student {
+public:
+    void printTeacherName(const std::string& teacherName) const {
+        std::cout << "Teacher's name is: " << teacherName << std::endl;
+    }
+};
+
+class School {
 private:
-    string autor;
+    std::vector<Student> students;
 
 public:
-    Emprestimolivro(string _nome, int _numero, int _numero_de_paginas, int _numero_do_livro, string _autor)
-        : Livro(_nome, _numero, _numero_de_paginas, _numero_do_livro), autor(_autor) {}
-
-    ~Emprestimolivro() {
-        cout << "O objeto Emprestimolivro foi destruído" << endl;
+    void addStudent(const Student& student) {
+        students.push_back(student);
     }
 
-    void mostrar_info_autor() const {
-        cout << "Autor: " << autor << endl;
+    void printTeachersToStudents() const {
+        Teacher teacher;
+        std::string teacherName = teacher.getName(); // Obtem o nome do professor aqui
+
+        for (const auto& student : students) {
+            student.printTeacherName(teacherName); // Passa o nome do professor diretamente
+        }
+    }
+};
+
+//LSP
+class Bird {
+public:
+    virtual void fly() const {
+        std::cout << "Bird flying" << std::endl;
+    }
+};
+
+class Ostrich : public Bird {
+public:
+    // O avestruz não voa, então não precisamos sobrescrever o método fly()
+};
+
+void makeBirdFly(const Bird& bird) {
+    bird.fly();
+}
+
+//DIP
+// Interface para lâmpada
+class Bulb {
+public:
+    virtual void turnOn() = 0;
+};
+
+// Implementação concreta da lâmpada
+class LightBulb : public Bulb {
+public:
+    void turnOn() override {
+        std::cout << "Light bulb turned on" << std::endl;
+    }
+};
+
+// Switch depende da interface Bulb
+class Switch {
+private:
+    Bulb& bulb;
+
+public:
+    Switch(Bulb& bulb) : bulb(bulb) {}
+
+    void toggle() {
+        bulb.turnOn();
     }
 };
 
 int main() {
-    // Criando um objeto Aluno
-    Aluno aluno("João", "123456", 20);
-    
-    // Imprimindo informações do aluno
-    aluno.mostrar_info();
-    
-    cout << endl;
+    //SRP
+    int a = 5;
+    int b = 3;
 
-    // Criando um objeto Livro
-    Livro livro("Introdução à Programação", 123, 300, 456);
-    
-    // Imprimindo informações do livro
-    livro.mostrar_info();
-    
-    cout << endl;
+    int additionResult = MathOperations::add(a, b);
+    ResultPrinter::printAdditionResult(additionResult);
 
-    // Criando um objeto Emprestimolivro
-    Emprestimolivro emprestimo("Clean Code", 456, 400, 789, "Robert C. Martin");
+    int multiplicationResult = MathOperations::multiply(a, b);
+    ResultPrinter::printMultiplicationResult(multiplicationResult);
+    printf("\n\n");
+    //DEMETER
+    Student student1, student2;
+    School school;
+    school.addStudent(student1);
+    school.addStudent(student2);
+    school.printTeachersToStudents();
+    printf("\n\n");
+    //LSP
+    Bird bird;
+    Ostrich ostrich;
 
-    // Imprimindo informações do empréstimo de livro
-    emprestimo.mostrar_info();
-    emprestimo.mostrar_info_autor(); // Mostra informações específicas do empréstimo
+    makeBirdFly(bird);    // Deve imprimir "Bird flying"
+    makeBirdFly(ostrich); // Deve imprimir "Bird flying", pois um avestruz é um tipo de pássaro
+    printf("\n\n");
+    //DIP
+    LightBulb lightBulb;
+    Switch lightSwitch(lightBulb);
+
+    lightSwitch.toggle(); // Deve imprimir "Light bulb turned on"
+
 
     return 0;
 }
-

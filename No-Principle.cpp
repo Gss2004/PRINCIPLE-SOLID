@@ -1,103 +1,123 @@
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
 
-class Aluno {
+//Neste exemplo, a classe Calculator tem duas responsabilidades distintas: realizar operações matemáticas e exibir resultados na tela. Isso viola o SRP.
+class Calculator {
 public:
-    string nome;
-    string ra;
-    int idade;
-
-public:
-    Aluno(string _nome, string _ra, int _idade) : nome(_nome), ra(_ra), idade(_idade) {}
-
-    ~Aluno() {
-        cout << "O objeto Aluno foi excluído" << endl;
+    void add(int a, int b) {
+        int result = a + b;
+        std::cout << "Result of addition: " << result << std::endl;
     }
-
-    void get_aluno() {
-        cout << "Nome: " << nome << endl;
-        cout << "RA: " << ra << endl;
-        cout << "Idade: " << idade << endl;
+                                            
+    void multiply(int a, int b) {
+        int result = a * b;
+        std::cout << "Result of multiplication: " << result << std::endl;
     }
 };
 
-class Livro {
-protected:
-    string nome;
-    int numero;
-    int numero_de_paginas;
-    int numero_do_livro;
-
+//Neste exemplo, a classe Student tem conhecimento sobre a classe Teacher através do método printTeacherName, que recebe uma instância de Teacher como argumento. Isso viola o Princípio de Demeter, pois Student está acessando indiretamente uma classe (Teacher) com a qual não deveria estar diretamente relacionada.
+class Teacher {
 public:
-    Livro(string _nome, int _numero, int _numero_de_paginas, int _numero_do_livro) 
-        : nome(_nome), numero(_numero), numero_de_paginas(_numero_de_paginas), numero_do_livro(_numero_do_livro) {}
-
-    ~Livro() {
-        cout << "O objeto Livro foi excluído" << endl;
-    }
-
-    void get_livro_aluno(Aluno aluno) {// ferindo principio srp e demeter
-        cout << "Nome do livro: " << nome << endl;
-        cout << "Número do livro: " << numero << endl;
-        cout << "Número de páginas: " << numero_de_paginas << endl;
-        cout << "Número do livro: " << numero_do_livro << endl;
-        cout << "Informações do aluno:" << endl;
-        cout << "Nome: " << aluno.nome << endl;
-        cout << "RA: " << aluno.ra << endl;
-        cout << "Idade: " << aluno.idade << endl;
+    std::string getName() const {
+        return "Mr. Smith";
     }
 };
 
-class Emprestimolivro : public Livro {// ferindo liskov 
+class Student {
+public:
+    void printTeacherName(const Teacher& teacher) const {
+        std::string teacherName = teacher.getName();
+        std::cout << "Teacher's name is: " << teacherName << std::endl;
+    }
+};
+
+class School {
 private:
-    string autor;
+    std::vector<Student> students;
 
 public:
-    Emprestimolivro(string _nome, int _numero, int _numero_de_paginas, int _numero_do_livro, string _autor)
-        : Livro(_nome, _numero, _numero_de_paginas, _numero_do_livro), autor(_autor) {}
-
-    ~Emprestimolivro() {
-        cout << "O objeto Emprestimolivro foi destruído" << endl;
+    void addStudent(const Student& student) {
+        students.push_back(student);
     }
 
-    void get_livro_aluno(Aluno aluno) {// ferindo open-close 
-        cout << "Nome do livro: " << nome << endl;
-        cout << "Número do livro: " << numero << endl;
-        cout << "Número de páginas: " << numero_de_paginas << endl;
-        cout << "Número do livro: " << numero_do_livro << endl;
-        cout << "Autor: " << autor << endl;
-        cout << "Informações do aluno:" << endl;
-        cout << "Nome: " << aluno.nome << endl;
-        cout << "RA: " << aluno.ra << endl;
-        cout << "Idade: " << aluno.idade << endl;
+    void printTeachersToStudents() const {
+        for (const auto& student : students) {
+            Teacher teacher;
+            student.printTeacherName(teacher); // Aqui a classe Student acessa indiretamente a classe Teacher
+        }
     }
 };
 
-int main() {
-    // Criando um objeto Aluno
-    Aluno aluno("João", "123456", 20);
-    
-    // Imprimindo informações do aluno
-    aluno.get_aluno();
-    
-    cout << endl;
+//Neste exemplo, a classe Ostrich herda de Bird, o que é uma relação "é um". No entanto, quando chamamos makeBirdFly() passando um objeto Ostrich, esperamos que o avestruz não voe. No entanto, a classe Ostrich sobrescreve o método fly() e imprime que o avestruz não pode voar. Isso viola o LSP, pois um objeto Ostrich não pode ser substituído corretamente por um objeto Bird em todas as situações, especialmente quando o comportamento esperado não é mantido.
 
-    // Criando um objeto Livro
-    Livro livro("Introdução à Programação", 123, 300, 456);
-    
-    // Imprimindo informações do livro
-    livro.get_livro_aluno(aluno);
-    
-    cout << endl;
+class Bird {
+public:
+    virtual void fly() const {
+        std::cout << "Bird flying" << std::endl;
+    }
+};
 
-    // Criando um objeto Emprestimolivro
-    Emprestimolivro emprestimo("Clean Code", 456, 400, 789, "Robert C. Martin");
+class Ostrich : public Bird {
+public:
+    void fly() const override {
+        std::cout << "Ostrich can't fly" << std::endl;
+    }
+};
 
-    // Imprimindo informações do empréstimo de livro
-    emprestimo.get_livro_aluno(aluno); // Passando um objeto aluno como argumento
-
-    return 0;
+void makeBirdFly(const Bird& bird) {
+    bird.fly();
 }
 
+
+
+//Neste exemplo, a classe Switch depende diretamente da classe concreta LightBulb, violando o DIP. Se no futuro quisermos trocar o tipo de lâmpada ou adicionar outras funcionalidades, como desligar ou regular a intensidade da luz, teríamos que modificar a classe Switch, o que não está de acordo com o princípio de inversão de dependência.
+
+class LightBulb {
+public:
+    void turnOn() {
+        std::cout << "Light bulb turned on" << std::endl;
+    }
+};
+
+class Switch {
+private:
+    LightBulb bulb;
+
+public:
+    void toggle() {
+        bulb.turnOn();
+    }
+};
+
+
+
+int main() {
+    //SRP
+    Calculator calculator;
+
+    calculator.add(5, 3);
+    calculator.multiply(4, 6);
+    printf("\n\n");
+    
+    //DEMETER
+    Student student1, student2;
+    School school;
+    school.addStudent(student1);
+    school.addStudent(student2);
+    school.printTeachersToStudents();
+    printf("\n\n");
+
+    //LSP
+    Bird bird;
+    Ostrich ostrich;
+
+    makeBirdFly(bird);
+    makeBirdFly(ostrich); // Violação do LSP, onde um Ostrich substitui um Bird, mas não se comporta como esperado
+    printf("\n\n");
+    
+    //DIP
+    Switch lightSwitch;
+    lightSwitch.toggle();
+    return 0;
+}
