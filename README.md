@@ -68,7 +68,7 @@ Este repositório contém dois conjuntos de códigos em C++, demonstrando a impo
      da interface Bulb em vez de uma implementação concreta. Agora, se quisermos adicionar novos tipos de lâmpadas ou funcionalidades, como desligar a luz, 
      podemos fazer isso sem modificar a classe Switch, mantendo assim o Princípio de Inversão de Dependência (DIP).
 
-### Como Usar:
+### Códigos:
 - O código violando os princípios SOLID está no arquivo [No-Principle.cpp](/No-Principle.cpp).
 - O código respeitando os princípios SOLID está no arquivo [Principle.cpp](/Principle.cpp).
 
