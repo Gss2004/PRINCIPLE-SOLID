@@ -1,6 +1,6 @@
 # Exemplo de Aplicação dos Princípios SOLID em C++
 
-Este repositório contém dois conjuntos de códigos em C++, demonstrando a importância e aplicação dos princípios SOLID no desenvolvimento de software.
+Este repositório contém dois conjuntos de códigos em C++ em que um dos códigos está de acordo com os princípios solid e o outro não está de acordo, demonstrando assim a importância e aplicação dos princípios SOLID no desenvolvimento de software.
 
 ### Princípios SOLID Usados nos códigos:
 
